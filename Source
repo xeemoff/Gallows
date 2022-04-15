@@ -1,0 +1,156 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool restart = true;
+
+class Game
+{
+private:
+
+	vector <string> word{ "DOM","KOT", "DOSKA", "STOL", "LOPATA", "LOMIK", "REKA", "POEZD" , "KROKODIL", "KOFTA", "KOFE", "LODKA", "PAPA", "RAKETA", "SOBAKA", "AVTOBUS", "TELEVIZOR", "TANK"};
+
+	string temp, letter_temp;
+
+	unsigned random;
+
+	char press_res, letter;
+
+	int lives = 10;
+
+	bool gw = false, gs = false, is_right = false;
+
+public:
+
+	void play()
+	{
+		random = rand() % word.size();
+
+		temp.resize(word[random].size());
+
+		for (int i = 0; i < temp.size(); i++)
+		{
+			temp[i] = '_';
+		}
+
+		while (!gw)
+		{
+			if (gs)
+			{
+				for (size_t i = 0; i < word[random].size(); i++)
+				{
+					if (letter == word[random][i] || letter == word[random][i] + 32)
+					{
+						temp[i] = word[random][i];
+						is_right = true;
+					}
+				}
+
+				if (temp == word[random])
+				{
+					gw = true;
+					break;
+				}
+			}
+
+			system("cls");
+			cout << "Hi! Welcome to the Gallows game!" << endl << endl;
+
+			for (int i = 0; i < temp.size(); i++)
+			{
+				cout << temp[i] << " ";
+			}
+			cout << endl;
+
+			if (gs)
+			{
+				for (size_t i = 0; i <= letter_temp.size(); i++)
+				{
+					if (letter == letter_temp[i])
+					{
+						cout << "You have already called this letter! " << "Letter: " << letter_temp[i] << endl;
+						is_right = false;
+						break;
+					}
+
+					if (i == letter_temp.size())
+					{
+						if (is_right)
+						{
+							cout << "You guessed the letter correctly!" << endl;
+							letter_temp += letter;
+							letter_temp += letter + 32;
+							letter_temp += letter - 32;
+							is_right = false;
+							break;
+						}
+
+						else
+						{
+							cout << "You guessed the letter wrong!" << endl;
+							--lives;
+							cout << "You have " << lives << " lives left!" << endl;
+							break;
+						}
+					}
+				}
+				if (lives == 0)
+				{
+					break;
+				}
+			}
+
+			cout << "Enter the letter: ";
+			cin >> letter;
+			gs = true;
+
+		}
+	}
+
+	void win()
+	{
+		if (gw)
+		{
+			system("cls");
+			cout << "WORD- ";
+			for (size_t i = 0; i < temp.size(); i++)
+			{
+				cout << temp[i];
+			}
+			cout << endl;
+
+			cout << "You WIN!" << endl;
+		}
+		else
+		{
+			system("cls");
+			cout << "WORD- ";
+			for (size_t i = 0; i < word[random].size(); i++)
+			{
+				cout << word[random][i];
+			}
+			cout << "YOU lose!!!" << endl;
+		}
+	}
+
+	void end()
+	{
+		cout << "Do you want to start the GAME again? Enter Y/N: ";
+		cin >> press_res;
+		if (press_res == 'n' || press_res == 'N') { restart = false; }
+	}
+};
+
+
+int main()
+{
+	srand(time(NULL));
+	do
+	{
+		Game g;
+		g.play();
+		g.win();
+		g.end();
+	} while (restart);
+}
